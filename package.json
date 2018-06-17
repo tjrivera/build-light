@@ -1,0 +1,33 @@
+{
+  "name": "build-light",
+  "version": "1.0.0",
+  "description": "A Webtask for controlling a build status light",
+  "main": "build-light.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "md5": "^2.2.1",
+    "node-fetch": "^2.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjrivera/build-light.git"
+  },
+  "keywords": [
+    "iot",
+    "webtask",
+    "hue",
+    "lights",
+    "automation",
+    "cicd"
+  ],
+  "author": "Tyler Rivera",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tjrivera/build-light/issues"
+  },
+  "homepage": "https://github.com/tjrivera/build-light#readme"
+}
