@@ -7,7 +7,7 @@ function subscribeToSNS(payload) {
 }
 
 module.exports = function (ctx, cb) {
-  // console.log(ctx.headers)
+  // Check SNS Headers
   const msg = ctx.headers['x-amz-sns-message-type']
   if (msg == 'SubscriptionConfirmation') {
     subscribeToSNS(ctx.body)
@@ -30,6 +30,8 @@ module.exports = function (ctx, cb) {
     color = 65535;
   } else if (stage == 'SUCCEEDED') {
     color = 23976;
+  } else {
+    cb(null, 'Build entered unknown state.')
   }
   
   // Update Light State
@@ -48,9 +50,4 @@ module.exports = function (ctx, cb) {
   })
     .then(response => response.json())
     .then(data => console.log(data));
-  if (stage== 'Unknown') {
-    cb(null, `Provide stage query parameter: start, failed, success`); 
-  } else {
-    cb(null, `Stage updated to ${stage}`); 
-  }
 }
