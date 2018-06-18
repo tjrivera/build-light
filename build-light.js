@@ -11,8 +11,10 @@ module.exports = function (ctx, cb) {
   const msg = ctx.headers['x-amz-sns-message-type']
   if (msg == 'SubscriptionConfirmation') {
     subscribeToSNS(ctx.body)
-  } else {
+  } else if (msg == 'Notification') {
     const state = ctx.body.detail['build-status']
+  } else {
+    cb(null, 'This endpoint supports SNS messages.')
   }
   
   // URL Construction
