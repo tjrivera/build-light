@@ -1,6 +1,19 @@
 const fetch = require('node-fetch');
 
+function subscribeToSNS(payload) {
+  let subscribeURL = payload.SubscribeURL;
+  // Confirm SNS Subscription TODO: Check return
+  fetch(subscribeURL)
+}
+
 module.exports = function (ctx, cb) {
+  // console.log(ctx.headers)
+  const msg = ctx.headers['x-amz-sns-message-type']
+  if (msg == 'SubscriptionConfirmation') {
+    subscribeToSNS(ctx.body)
+  } else {
+    const state = ctx.body.detail['build-status']
+  }
   
   // URL Construction
   const baseUrl = 'https://api.meethue.com/bridge/';
@@ -10,13 +23,12 @@ module.exports = function (ctx, cb) {
   const url = `${baseUrl}${userId}/lights/${lightId}/state`;
 
   // Determine Colors
-  const stage = ctx.query.stage ? ctx.query.stage: 'Unknown';
   let color = 0
-  if (stage == 'start') {
+  if (state == 'SUBMITTED') {
     color = 9989
-  } else if (stage == 'failed') {
+  } else if (stage == 'FAILED') {
     color = 65535;
-  } else if (stage == 'success') {
+  } else if (stage == 'SUCCEEDED') {
     color = 23976;
   }
   
