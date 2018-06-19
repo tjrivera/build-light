@@ -10,11 +10,14 @@ module.exports = function (ctx, cb) {
   // Check SNS Headers
   const msg = ctx.headers['x-amz-sns-message-type']
   if (msg == 'SubscriptionConfirmation') {
-    subscribeToSNS(ctx.body)
+    subscribeToSNS(JSON.parse(ctx.body_raw))
+    return cb(null, 'Subscribed!')
+    
   } else if (msg == 'Notification') {
-    const state = ctx.body.detail['build-status']
+    const payload = JSON.parse(ctx.body_raw)
+    const state = payload['build-status']
   } else {
-    cb(null, 'This endpoint supports SNS messages.')
+    return cb(null, 'This endpoint supports SNS messages.')
   }
   
   // URL Construction
@@ -33,7 +36,7 @@ module.exports = function (ctx, cb) {
   } else if (stage == 'SUCCEEDED') {
     color = 23976;
   } else {
-    cb(null, 'Build entered unknown state.')
+    return cb(null, 'Build entered unknown state.')
   }
   
   // Update Light State
@@ -52,4 +55,5 @@ module.exports = function (ctx, cb) {
   })
     .then(response => response.json())
     .then(data => console.log(data));
+  return cb(null, 'State updated')
 }
