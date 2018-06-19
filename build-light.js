@@ -18,6 +18,7 @@ module.exports = function (ctx, cb) {
     const payload = JSON.parse(ctx.body_raw)
     const sns_msg = JSON.parse(payload.Message)
     state = sns_msg.detail['build-status']
+    console.log(`Current state: ${state}`)
   } else {
     return cb(null, 'This endpoint supports SNS messages.')
   }
@@ -31,7 +32,7 @@ module.exports = function (ctx, cb) {
 
   // Determine Colors
   let color = 0
-  if (state == 'SUBMITTED') {
+  if (state == 'IN_PROGRESS') {
     color = 9989
   } else if (state == 'FAILED') {
     color = 65535;
