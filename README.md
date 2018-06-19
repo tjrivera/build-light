@@ -49,6 +49,13 @@ Local dev:
 make serve 
 ```
 
+Deploy:
+```
+make create
+```
+
+After deploying the webtask create an SNS topic and create a subscription to the webtask endpoint provided. After the subscription you'll also want to create a CloudWatch rule that sends all CodeBuild state changes to the SNS topic you created. 
+
 TODO:
 * Bearer token should automatically update using provided refresh token.
 
