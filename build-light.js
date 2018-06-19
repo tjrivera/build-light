@@ -9,13 +9,15 @@ function subscribeToSNS(payload) {
 module.exports = function (ctx, cb) {
   // Check SNS Headers
   const msg = ctx.headers['x-amz-sns-message-type']
+  let state = ''
   if (msg == 'SubscriptionConfirmation') {
     subscribeToSNS(JSON.parse(ctx.body_raw))
     return cb(null, 'Subscribed!')
     
   } else if (msg == 'Notification') {
     const payload = JSON.parse(ctx.body_raw)
-    const state = payload['build-status']
+    const sns_msg = JSON.parse(payload.Message)
+    state = sns_msg.detail['build-status']
   } else {
     return cb(null, 'This endpoint supports SNS messages.')
   }
@@ -31,9 +33,9 @@ module.exports = function (ctx, cb) {
   let color = 0
   if (state == 'SUBMITTED') {
     color = 9989
-  } else if (stage == 'FAILED') {
+  } else if (state == 'FAILED') {
     color = 65535;
-  } else if (stage == 'SUCCEEDED') {
+  } else if (state == 'SUCCEEDED') {
     color = 23976;
   } else {
     return cb(null, 'Build entered unknown state.')
