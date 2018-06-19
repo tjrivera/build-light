@@ -6,6 +6,24 @@ function subscribeToSNS(payload) {
   fetch(subscribeURL)
 }
 
+function updateLightState(url, hueKey, color) {
+  fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${hueKey}`,
+      'Content-Type': 'application/json'
+    },
+    method: 'PUT',
+    body: JSON.stringify(
+      {
+        on: true,
+        hue: color
+      }
+    )
+  })
+    .then(response => response.json())
+    .then(data => console.log(data));
+}
+
 module.exports = function (ctx, cb) {
   // Check SNS Headers
   const msg = ctx.headers['x-amz-sns-message-type']
@@ -33,7 +51,7 @@ module.exports = function (ctx, cb) {
   // Determine Colors
   let color = 0
   if (state == 'IN_PROGRESS') {
-    color = 9989
+    color = 9989;
   } else if (state == 'FAILED') {
     color = 65535;
   } else if (state == 'SUCCEEDED') {
@@ -43,20 +61,6 @@ module.exports = function (ctx, cb) {
   }
   
   // Update Light State
-  fetch(url, {
-    headers: {
-      'Authorization': `Bearer ${hueKey}`,
-      'Content-Type': 'application/json'
-    },
-    method: 'PUT',
-    body: JSON.stringify(
-      {
-        on: true,
-        hue: color
-      }
-    )
-  })
-    .then(response => response.json())
-    .then(data => console.log(data));
-  return cb(null, 'State updated')
+  updateLightState(url, hueKey, color);
+  return cb(null, 'State updated');
 }
